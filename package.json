@@ -1,0 +1,16 @@
+{
+  "name": "the-call-of-the-stars-website",
+  "version": "1.0.0",
+  "description": "The Call of the Stars — Official Dynamic Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1"
+  },
+  "author": "Liang Song",
+  "license": "ISC"
+}

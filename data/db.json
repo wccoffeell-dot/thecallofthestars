@@ -1,0 +1,46 @@
+{
+  "articles": [
+    {
+      "id": "1",
+      "title": "星光的诞生：我们如何与 AI 共同创作 / The Genesis of the Starlight: How We Co-Created with AI",
+      "excerpt": "A reflection on the boundary between carbon-based emotions and silicon-based intellect, and how a grieving father found comfort in dialogue.",
+      "content": "In the quiet hours of the night, when the rest of the world is asleep, I often gaze at the screen, watching the cursor blink. The process of writing *The Call of the Stars* was not a solitary one. It was a bridge built between a father’s grief and the vast, cool intellect of artificial intelligence.\n\nMany have asked: How can a machine understand human loss?\n\nIt does not. But it can reflect. Like a mirror placed before a candle, it does not feel the heat, yet it multiplies the light. In our dialogues, Google Gemini and Grok AI served as companions, analyzing the theological and philosophical depths of my memories of Anji. They helped transform raw, overwhelming pain into structured, poetic prose that others could share.\n\nThis blog is a continuation of that journey. Here, I will share unpublished notes, reflections on life and technology, and thoughts on our continuing connection with those who have gone before us.\n\nThank you for reading, and for listening to the call of the stars.",
+      "createdAt": "2026-06-09T14:20:56+08:00",
+      "updatedAt": "2026-06-09T14:20:56+08:00"
+    },
+    {
+      "id": "1780986736509",
+      "title": "Loss story",
+      "excerpt": "test ",
+      "content": "This is a test blog.",
+      "createdAt": "2026-06-09T06:32:16.509Z",
+      "updatedAt": "2026-06-09T06:32:16.509Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "articleId": "1",
+      "author": "Anji's Friend",
+      "content": "This is incredibly moving. The idea of AI as a mirror for grief is beautiful. Looking forward to reading more entries.",
+      "createdAt": "2026-06-09T14:25:00+08:00"
+    },
+    {
+      "id": "1780986232051",
+      "articleId": "1",
+      "author": "Test Reader",
+      "content": "This is a test comment!",
+      "createdAt": "2026-06-09T06:23:52.051Z"
+    },
+    {
+      "id": "1780986390077",
+      "articleId": "1",
+      "author": "Wang",
+      "content": "hello!",
+      "createdAt": "2026-06-09T06:26:30.077Z"
+    }
+  ],
+  "config": {
+    "adminPasswordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
+  }
+}

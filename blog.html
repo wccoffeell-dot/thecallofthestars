@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Starry Journal — The Call of the Stars Blog</title>
+  <meta name="description" content="Official blog and updates for The Call of the Stars by Liang Song. Share your thoughts and leave messages.">
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+  <!-- Star Field Canvas -->
+  <canvas id="star-canvas" aria-hidden="true"></canvas>
+
+  <!-- Navigation -->
+  <nav class="site-nav" id="site-nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo">The Call of the Stars</a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html#story">The Story</a></li>
+      <li><a href="index.html#excerpts">Excerpts</a></li>
+      <li><a href="index.html#dreams">The Dreams</a></li>
+      <li><a href="index.html#cocreation">Co-Creation</a></li>
+      <li><a href="index.html#author">Author</a></li>
+      <li><a href="index.html#editions">Editions</a></li>
+      <li><a href="blog.html" style="color:var(--star-gold);">Blog</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="blog-hero">
+    <h1 class="blog-hero-title">
+      The Starry Journal
+      <span>星空日志</span>
+    </h1>
+    <p class="blog-hero-subtitle">Reflections on Love, Loss, and the Cosmic Connection</p>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="blog-container">
+
+    <!-- Admin Panel Control Bar (Visible only when logged in as admin) -->
+    <div id="admin-bar" class="admin-actions-bar" style="display: none;">
+      <div class="admin-welcome">Welcome, Author Liang Song</div>
+      <div class="admin-buttons">
+        <button id="btn-new-article" class="btn-primary btn-small">New Article</button>
+        <button id="btn-change-password-trigger" class="btn-primary btn-small btn-secondary">Change Password</button>
+        <button id="btn-logout" class="btn-primary btn-small btn-danger">Logout</button>
+      </div>
+    </div>
+
+    <!-- State 1: Blog Feed (List of Articles) -->
+    <div id="view-feed" class="blog-feed">
+      <div id="feed-loading" class="empty-state">Loading starry entries...</div>
+      <div id="feed-articles"></div>
+    </div>
+
+    <!-- State 2: Article Detail View (Single Article + Comments) -->
+    <div id="view-detail" class="blog-detail-view" style="display: none;">
+      <a href="#" id="btn-back-to-feed" class="btn-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Journal
+      </a>
+      
+      <!-- Full Article Content -->
+      <article class="article-detail">
+        <h2 id="detail-title" class="article-detail-title">Article Title</h2>
+        <div class="article-meta">
+          <span id="detail-date">Date</span>
+          <span>By Liang Song</span>
+        </div>
+        <div id="detail-content" class="article-detail-content">
+          <!-- Populated dynamically -->
+        </div>
+      </article>
+
+      <!-- Comments Section -->
+      <section class="comments-section">
+        <h3 class="comments-title">Messages & Thoughts (<span id="comment-count">0</span>)</h3>
+        
+        <!-- List of comments -->
+        <div id="comments-list" class="comment-list">
+          <div class="empty-state">No thoughts shared yet. Be the first to leave a message.</div>
+        </div>
+
+        <!-- Add Comment Form -->
+        <div class="comment-form-container">
+          <h4 class="comment-form-title">Leave a Message</h4>
+          <form id="comment-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="comment-author">Name / Nickname</label>
+                <input type="text" id="comment-author" placeholder="Your name" required maxlength="50">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="comment-content">Your Message</label>
+              <textarea id="comment-content" placeholder="Share your reflections, thoughts on the book, or words of comfort..." required maxlength="1000"></textarea>
+            </div>
+            <button type="submit" class="btn-primary">
+              Send Message
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-star">🌟</div>
+      <p class="footer-quote">
+        "May Anji's starlight forever illuminate those who gaze upward in the night."
+      </p>
+      <p class="footer-copy">
+        © 2026 Liang Song. All rights reserved. ·
+        <a href="mailto:wccoffeell@gmail.com">Contact</a> ·
+        <a href="#" id="link-admin-login">Admin Panel</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==============================
+     Modals
+     ============================== -->
+
+  <!-- Modal 1: Admin Login -->
+  <div id="modal-login" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Author Authentication</h3>
+        <button class="modal-close" data-close="modal-login">&times;</button>
+      </div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-password">Author Password</label>
+          <input type="password" id="login-password" placeholder="Enter password" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-primary btn-small btn-secondary" data-close="modal-login">Cancel</button>
+          <button type="submit" class="btn-primary btn-small">Unlock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Create / Edit Article -->
+  <div id="modal-editor" class="modal-overlay">
+    <div class="modal-content" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 id="editor-modal-title" class="modal-title">Write Article</h3>
+        <button class="modal-close" data-close="modal-editor">&times;</button>
+      </div>
+      <form id="editor-form">
+        <input type="hidden" id="editor-article-id">
+        <div class="form-group">
+          <label for="editor-title">Title</label>
+          <input type="text" id="editor-title" placeholder="Enter article title" required>
+        </div>
+        <div class="form-group">
+          <label for="editor-excerpt">Excerpt (Optional summary for the feed list)</label>
+          <input type="text" id="editor-excerpt" placeholder="A brief description...">
+        </div>
+        <div class="form-group">
+          <label for="editor-content">Content (Markdown paragraphs or standard text)</label>
+          <textarea id="editor-content" placeholder="Write your thoughts..." required style="min-height: 250px;"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-primary btn-small btn-secondary" data-close="modal-editor">Cancel</button>
+          <button type="submit" class="btn-primary btn-small">Publish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Change Password -->
+  <div id="modal-password" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Change Author Password</h3>
+        <button class="modal-close" data-close="modal-password">&times;</button>
+      </div>
+      <form id="password-form">
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password" placeholder="At least 6 characters" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" placeholder="Re-type password" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-primary btn-small btn-secondary" data-close="modal-password">Cancel</button>
+          <button type="submit" class="btn-primary btn-small">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-notification" class="toast">Star light notification...</div>
+
+  <script src="blog.js"></script>
+</body>
+
+</html>
