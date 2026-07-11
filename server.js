@@ -23,6 +23,10 @@ function readDB() {
       const defaultDB = {
         articles: [],
         comments: [],
+        visitors: {
+          totalIPs: [],
+          dailyRecords: {}
+        },
         config: {
           adminPasswordHash: '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9' // admin123
         }
@@ -35,7 +39,7 @@ function readDB() {
     return JSON.parse(data);
   } catch (err) {
     console.error('Error reading database file:', err);
-    return { articles: [], comments: [], config: {} };
+    return { articles: [], comments: [], visitors: { totalIPs: [], dailyRecords: {} }, config: {} };
   }
 }
 
@@ -271,6 +275,84 @@ app.delete('/api/comments/:id', requireAdmin, (req, res) => {
   } else {
     res.status(404).json({ error: 'Comment not found.' });
   }
+});
+
+// --- Visitor Tracking ---
+
+// Helper: Get client IP address
+function getClientIP(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  return req.socket.remoteAddress || req.ip || 'unknown';
+}
+
+// Helper: Get today's date string in YYYY-MM-DD format
+function getTodayString() {
+  const now = new Date();
+  return now.toISOString().split('T')[0];
+}
+
+// POST /api/visit — Record a visit (IP dedup for today)
+app.post('/api/visit', (req, res) => {
+  const db = readDB();
+  const clientIP = getClientIP(req);
+  const today = getTodayString();
+
+  // Ensure visitors structure exists
+  if (!db.visitors) {
+    db.visitors = { totalIPs: [], dailyRecords: {} };
+  }
+  if (!db.visitors.totalIPs) {
+    db.visitors.totalIPs = [];
+  }
+  if (!db.visitors.dailyRecords) {
+    db.visitors.dailyRecords = {};
+  }
+
+  // Track total unique IPs (all-time)
+  if (!db.visitors.totalIPs.includes(clientIP)) {
+    db.visitors.totalIPs.push(clientIP);
+  }
+
+  // Track daily unique IPs
+  if (!db.visitors.dailyRecords[today]) {
+    db.visitors.dailyRecords[today] = [];
+  }
+  if (!db.visitors.dailyRecords[today].includes(clientIP)) {
+    db.visitors.dailyRecords[today].push(clientIP);
+  }
+
+  // Clean up old daily records (keep last 30 days to prevent bloat)
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - 30);
+  const cutoffStr = cutoffDate.toISOString().split('T')[0];
+  for (const dateKey of Object.keys(db.visitors.dailyRecords)) {
+    if (dateKey < cutoffStr) {
+      delete db.visitors.dailyRecords[dateKey];
+    }
+  }
+
+  writeDB(db);
+
+  res.json({
+    totalVisitors: db.visitors.totalIPs.length,
+    todayVisitors: db.visitors.dailyRecords[today].length
+  });
+});
+
+// GET /api/visitors — Get visitor stats
+app.get('/api/visitors', (req, res) => {
+  const db = readDB();
+  const today = getTodayString();
+
+  const visitors = db.visitors || { totalIPs: [], dailyRecords: {} };
+  const totalVisitors = (visitors.totalIPs || []).length;
+  const todayVisitors = (visitors.dailyRecords && visitors.dailyRecords[today]) ?
+    visitors.dailyRecords[today].length : 0;
+
+  res.json({ totalVisitors, todayVisitors });
 });
 
 // Blog shortcut routes

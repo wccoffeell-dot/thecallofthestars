@@ -40,6 +40,18 @@
       "createdAt": "2026-06-09T06:26:30.077Z"
     }
   ],
+  "visitors": {
+    "totalIPs": [
+      "::ffff:127.0.0.1",
+      "::1"
+    ],
+    "dailyRecords": {
+      "2026-07-11": [
+        "::ffff:127.0.0.1",
+        "::1"
+      ]
+    }
+  },
   "config": {
     "adminPasswordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
   }

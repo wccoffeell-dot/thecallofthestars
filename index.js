@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStarField();
   initScrollAnimations();
   initNavigation();
+  initVisitorCounter();
 });
 
 /* --- Animated Star Field (Canvas) --- */
@@ -120,4 +121,58 @@ function initNavigation() {
       });
     });
   }
+}
+
+/* --- Visitor Counter --- */
+function initVisitorCounter() {
+  const totalEl = document.getElementById('total-visitors');
+  const todayEl = document.getElementById('today-visitors');
+  const counterEl = document.getElementById('visitor-counter');
+
+  if (!totalEl || !todayEl || !counterEl) return;
+
+  // Animated count-up effect
+  function animateCount(element, target) {
+    const duration = 800;
+    const start = performance.now();
+    const startVal = 0;
+
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(startVal + (target - startVal) * eased);
+      element.textContent = current.toLocaleString();
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        element.classList.add('counting');
+        setTimeout(() => element.classList.remove('counting'), 600);
+      }
+    }
+    requestAnimationFrame(update);
+  }
+
+  // Record visit and fetch stats
+  fetch('/api/visit', { method: 'POST' })
+    .then(res => res.json())
+    .then(data => {
+      animateCount(totalEl, data.totalVisitors || 0);
+      animateCount(todayEl, data.todayVisitors || 0);
+    })
+    .catch(() => {
+      // Fallback: try GET endpoint
+      fetch('/api/visitors')
+        .then(res => res.json())
+        .then(data => {
+          animateCount(totalEl, data.totalVisitors || 0);
+          animateCount(todayEl, data.todayVisitors || 0);
+        })
+        .catch(() => {
+          // Hide counter if API is unavailable
+          counterEl.style.display = 'none';
+        });
+    });
 }
